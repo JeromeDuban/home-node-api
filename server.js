@@ -33,17 +33,17 @@ app.get('/', function(req, res) {
 	return res.send('Hello! The API is at http://localhost:' + port + '/api');
 });
 
-app.get('/setup', function(req, res) {
+// app.get('/setup', function(req, res) {
 
-	db.serialize(function () {
+// 	db.serialize(function () {
 
-		var table_name = "Users";
-		var query_table = "CREATE TABLE IF NOT EXISTS " + table_name + "([Id] INTEGER PRIMARY KEY, [Username] [varchar](64) UNIQUE NOT NULL, [Password] [varchar](128) NOT NULL, [Mail] [varchar](128) UNIQUE NOT NULL);";
-		db.run(query_table);
+// 		var table_name = "Users";
+// 		var query_table = "CREATE TABLE IF NOT EXISTS " + table_name + "([Id] INTEGER PRIMARY KEY, [Username] [varchar](64) UNIQUE NOT NULL, [Password] [varchar](128) NOT NULL, [Mail] [varchar](128) UNIQUE NOT NULL);";
+// 		db.run(query_table);
 
-		adduser(res, "*******", "******","******");
-  	});	
-});
+// 		adduser(res, "*******", "******","******");
+//   	});	
+// });
 
 
 // API ROUTES -------------------
