@@ -5,6 +5,7 @@ var express     = require('express');
 var app         = express();
 var bodyParser  = require('body-parser');
 var morgan      = require('morgan');
+var ping 		= require('ping');
 
 var passwordHash = require('password-hash');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
@@ -125,6 +126,10 @@ apiRoutes.use(function(req, res, next) {
 	}
 });
 
+////////////////////////
+//////// USERS  ////////
+////////////////////////
+
 // route to return all users (GET http://localhost:8080/api/users)
 apiRoutes.get('/users', function(req, res) {
 
@@ -138,7 +143,6 @@ apiRoutes.get('/users', function(req, res) {
         return res.json({users : rows});
     });
 });
-
 
 apiRoutes.post('/users/create', function(req, res) {
 	adduser(res,req.body.username, req.body.password, req.body.mail);
@@ -156,6 +160,25 @@ apiRoutes.put('/users/edit/', function(req, res){
 	return res.json({test : "test"});
 });
 
+////////////////////////
+//////// STATUS  ///////
+////////////////////////
+
+
+apiRoutes.get('/status/:ip',function(req,res){
+	var ip = req.params.ip;
+	if (ip){
+		var hosts = [ip];
+		hosts.forEach(function(host){
+		    ping.sys.probe(host, function(isAlive){
+		        return res.json({ success: true, status: isAlive });    
+		    });
+		});
+	}else {
+		return res.json({ success: false, message: "No ip provided" });    
+	}
+
+});
 // apply the routes to our application with the prefix /api
 app.use('/api', apiRoutes)
 
