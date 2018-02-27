@@ -88,12 +88,12 @@ apiRoutes.post('/authenticate', function(req, res) {
 		console.log("results : " + rows.length);    
 	    if(err){
 	        console.log(err);
-	        return res.json({result: false, message : err.message});
+	        return res.json({success: false, message : err.message});
 	    }
 
 	    // TODO : extract to method vetifyPassword
         if (rows.length != 1 || !passwordHash.verify(password, rows[0].Password)){
-        	return res.json({ result: false, message : "Invalid login/password" });
+        	return res.json({ success: false, message : "Invalid login/password" });
         }
 
 		var token = jwt.sign({username : username}, app.get('superSecret'), {
