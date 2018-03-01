@@ -114,15 +114,20 @@ apiRoutes.post('/authenticate', function(req, res) {
 apiRoutes.use(function(req, res, next) {
 
 	// check header or url parameters or post parameters for token
-	var token = req.body.token || req.query.token || req.headers['x-access-token'];
+	//var token = req.body.token || req.query.token || req.headers['Authorization'];
 
+	var token = req.headers.authorization ? req.headers.authorization.replace("Bearer ", "") : null;
+	
 	// decode token
 	if (token) {
 
 		// verifies secret and checks exp
 		jwt.verify(token, app.get('superSecret'), function(err, token) {      
 			if (err) {
-				return res.json({ success: false, message: 'Failed to authenticate user' });    
+				return res.status(401).send({ 
+					success: false,
+					message: 'Failed to authenticate user'
+				});    
 			} else {
 				// if everything is good, save to request for use in other routes
 				req.token = token;    
