@@ -85,11 +85,12 @@ apiRoutes.post('/authenticate', function(req, res) {
 	var query_exists = "SELECT * FROM Users WHERE Username='"+username+"';";
 
 	db.all(query_exists, function (err, rows) {
-		console.log("results : " + rows.length);    
+		
 	    if(err){
 	        console.log(err);
-	        return res.json({success: false, message : err.message});
+	        return res.status(404).json({success: false, message : err.message});
 	    }
+	    console.log("results : " + rows.length);    
 
 	    // TODO : extract to method vetifyPassword
         if (rows.length != 1 || !passwordHash.verify(password, rows[0].Password)){
@@ -107,6 +108,10 @@ apiRoutes.post('/authenticate', function(req, res) {
 			token: token
 		}); 
   	});
+});
+
+apiRoutes.post('/users/create', function(req, res) {
+	adduser(res,req.body.username, req.body.password, req.body.mail);
 });
 
 
@@ -163,10 +168,6 @@ apiRoutes.get('/users', function(req, res) {
 
         return res.json({users : rows});
     });
-});
-
-apiRoutes.post('/users/create', function(req, res) {
-	adduser(res,req.body.username, req.body.password, req.body.mail);
 });
 
 apiRoutes.put('/users/edit/', function(req, res){
