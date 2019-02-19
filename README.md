@@ -4,11 +4,11 @@
 ## Install
 * Install node, npm & sqlite3
 * Run `npm install`
-* Set a secret in config.js
+* Set a secret in `config.js`
 
 ## Setup
-Décommenter le bloc /setup pour initialiser le serveur.  
-A la racine, lancer node app/server.js
+Décommenter le bloc `/setup` pour initialiser le serveur.  
+A la racine, lancer la commande `node app/server.js`
 
 Appeler `GET/ http://localhost:8080/setup` afin de créér la table user
 
