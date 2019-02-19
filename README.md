@@ -13,7 +13,7 @@ A la racine, lancer node app/server.js
 Appeler `GET/ http://localhost:8080/setup` afin de créér la table user
 
 ## Créer un utilisateur :
-`POST/ http://localhost:8080/api/users/create`
+`POST/ http://localhost:8080/api/users/create`  
 **Headers :**
 Content-Type application/x-www-form-urlencoded
 
@@ -23,7 +23,7 @@ password : "password"
 mail : "mail@mail.fr"
 
 ## Authentification :
-`POST/ http://localhost:8080/api/authenticate`
+`POST/ http://localhost:8080/api/authenticate`  
 **Headers :**
 Content-Type application/x-www-form-urlencoded
 
