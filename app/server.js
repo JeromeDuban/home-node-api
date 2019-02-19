@@ -46,9 +46,28 @@ app.use(cors(corsOptions));
 // routes ================
 // =======================
 // basic route
-app.get('/', function(req, res) {
-	return res.send('Hello! The API is at http://localhost:' + port + '/api');
+
+const allowed = [
+  '.js',
+  '.css',
+  '.png',
+  '.jpg',
+  '.html',
+  '.json'
+];
+
+app.get('/*', function(req, res) {
+
+ if (allowed.filter(ext => req.url.indexOf(ext) > 0).length > 0) {
+      return res.sendFile(req.url, { root: __dirname+"/../" });
+   } else {
+      
+      return res.sendFile("index.html", { root: __dirname+"/../front/" });
+   }
+	
 });
+
+
 
 // A commenter une fois la table créé (à mettre dans script.sh plutôt)
 // app.get('/setup', function(req, res) {

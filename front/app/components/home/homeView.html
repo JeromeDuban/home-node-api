@@ -1,0 +1,19 @@
+<div>
+	<div id="container">
+		<div class="row">
+			<p>{{theTime}}</p>
+		</div>
+		<div class="row">
+			<div class="col-md-3" ng-repeat="p in devices" class="box">
+				<div class="card">
+					<div class="card-header">{{p.label}}</div>
+					<div class="card-body">
+						<p class="card-text">IP : {{p.ip}}<br/>
+						Statut : {{p.status ? "En ligne" : "Hors ligne"}}</p>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+	</div>
+</div>
