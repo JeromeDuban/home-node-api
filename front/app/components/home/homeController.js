@@ -15,11 +15,6 @@ app.controller('homeController', ['$scope','$http','$interval',function($scope,$
 }]);
 
 
-// var config = {headers:  {
-//         'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImplamVmY2diIiwiaWF0IjoxNTE5MDc4ODU3LCJleHAiOjE1MTkxNjUyNTd9.kxL9BCC4kG_oh7G0U-Cp58aQ1sTzptgWHOCyLT2Fb-s'
-//     }
-// };
-
 function getStatus($scope, $http, $interval){
 
 	var status = function (){
@@ -35,8 +30,8 @@ function getStatus($scope, $http, $interval){
 					console.log(value);
 				},
 				function(data) {
-			      console.log(data);
-			      location.reload();
+			      	console.log(data);
+			    	value.status = "Error " + data.status;
 			    }
 			);
 		});

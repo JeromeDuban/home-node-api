@@ -1,4 +1,5 @@
 app.config(function($routeProvider) {
+        var test = "bla";
         $routeProvider
         .when("/", {
             templateUrl : "front/app/components/home/homeView.html",
@@ -13,32 +14,41 @@ app.config(function($routeProvider) {
 ).run(run);
 
 function run($rootScope, $http, $location, $localStorage, AuthenticationService) {
+
     // keep user logged in after page refresh
     if ($localStorage.currentUser) {
         $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.currentUser.token;
+    }
+
+    continueRouting($rootScope, $http, $location, $localStorage, AuthenticationService);
+    
+}
+
+function continueRouting($rootScope, $http, $location, $localStorage, AuthenticationService){
+// redirect to login page if not logged in and trying to access a restricted page
+    $rootScope.$on('$locationChangeStart', function (event, next, current) {
 
         var url = "http://localhost:8080/api/ping";
         $http.get(url).then(
             function(response) {
-              continueRouting($rootScope,$location, $localStorage);
+                redirect($location,$localStorage);
             },
             function(data) {
-              AuthenticationService.Logout();
-              continueRouting($rootScope,$location, $localStorage);
+                if ($localStorage.currentUser) {
+                    AuthenticationService.Logout();
+                }
+                redirect($location,$localStorage);
             }
         );
-    }else{
-        continueRouting($rootScope,$location, $localStorage);
-    }
-}
 
-function continueRouting($rootScope,$location, $localStorage){
-// redirect to login page if not logged in and trying to access a restricted page
-    $rootScope.$on('$locationChangeStart', function (event, next, current) {
-        var publicPages = ['/login'];
-        var restrictedPage = publicPages.indexOf($location.path()) === -1;
-        if (restrictedPage && !$localStorage.currentUser) {
-            $location.path('/login');
-        }
     });
 };
+
+
+function redirect($location,$localStorage ){
+    var publicPages = ['/login'];
+    var restrictedPage = publicPages.indexOf($location.path()) === -1;
+    if (restrictedPage && !$localStorage.currentUser) {
+        $location.path('/login');
+    }
+}

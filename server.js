@@ -9,10 +9,10 @@ var ping 		= require('ping');
 var cors 		= require('cors');
 
 var passwordHash = require('password-hash');
-var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var config = require('./config'); // get our config file
-var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('local_api.db');
+var jwt    		= require('jsonwebtoken'); // used to create, sign, and verify tokens
+var config 		= require('./config'); // get our config file
+var sqlite3 	= require('sqlite3').verbose();
+var db 			= new sqlite3.Database('local_api.db');
 
 // =======================
 // configuration =========
@@ -42,10 +42,9 @@ var corsOptions = {
 }
 app.use(cors(corsOptions));
 
-// =======================
-// routes ================
-// =======================
-// basic route
+//////////////////////////////////
+////          FRONT           ////
+//////////////////////////////////
 
 const allowed = [
   '.js',
@@ -56,18 +55,20 @@ const allowed = [
   '.json'
 ];
 
-app.get('/*', function(req, res) {
-
+// Permet de forcer le routage angular plutôt que le routage node (/*)
+// N'autorise que les fichiers avec les extensions listées.
+app.get('/site/*', function(req, res) {
  if (allowed.filter(ext => req.url.indexOf(ext) > 0).length > 0) {
-      return res.sendFile(req.url, { root: __dirname+"/../" });
-   } else {
-      
-      return res.sendFile("index.html", { root: __dirname+"/../front/" });
+      return res.sendFile(req.url.replace('/site',''), { root: __dirname });
+   } else {   
+      return res.sendFile("index.html", { root: __dirname+"/front/" });
    }
 	
 });
 
-
+//////////////////////////////////
+////          SETUP           ////
+//////////////////////////////////
 
 // A commenter une fois la table créé (à mettre dans script.sh plutôt)
 // app.get('/setup', function(req, res) {
@@ -86,8 +87,11 @@ app.get('/*', function(req, res) {
 // 	});    
 //  });
 
+//////////////////////////////////
+////        API ROUTES        ////
+//////////////////////////////////
 
-// API ROUTES -------------------
+
 // get an instance of the router for api routes
 var apiRoutes = express.Router(); 
 
@@ -122,7 +126,7 @@ apiRoutes.post('/authenticate', function(req, res) {
         }
 
 		var token = jwt.sign({username : username}, app.get('superSecret'), {
-			expiresIn: "24h" // expires in 24 hours
+			expiresIn: "15s" // expires in 24 hours
 		});
 
 		// return the information including token as JSON
@@ -139,7 +143,10 @@ apiRoutes.post('/users/create', function(req, res) {
 });
 
 
-// route middleware to verify a token
+//////////////////////////////////
+////     SECURED METHODS      ////
+//////////////////////////////////
+
 apiRoutes.use(function(req, res, next) {
 
 	// check header or url parameters or post parameters for token
@@ -174,6 +181,10 @@ apiRoutes.use(function(req, res, next) {
 	    });
 
 	}
+});
+
+apiRoutes.get('/ping', function(req, res) {
+       return res.json(true);
 });
 
 ////////////////////////
@@ -227,6 +238,7 @@ apiRoutes.get('/status/:ip',function(req,res){
 });
 // apply the routes to our application with the prefix /api
 app.use('/api', apiRoutes)
+
 
 // =======================
 // start the server ======
